@@ -60,7 +60,7 @@ internal class Http2Reader(
   private val client: Boolean
 ) : Closeable {
   private val continuation: ContinuationSource = ContinuationSource(this.source)
-  val hpackReader: Hpack.Reader = Hpack.Reader(4096, continuation)
+  private val hpackReader: Hpack.Reader = Hpack.Reader(continuation, 4096)
 
   @Throws(IOException::class)
   fun readConnectionPreface(handler: Handler) {
@@ -363,7 +363,7 @@ internal class Http2Reader(
     }
   }
 
-  internal interface Handler {
+  interface Handler {
     @Throws(IOException::class)
     fun data(inFinished: Boolean, streamId: Int, source: BufferedSource, length: Int)
 
